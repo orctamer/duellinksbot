@@ -1,0 +1,25 @@
+doctype html
+html
+    head
+        title Duel Links Anytime Tournament
+        link(rel="stylesheet", href="style.css")
+    body
+        .container
+            h1 Welcome #{user}!
+            p.tickets You currently have 
+                b #{tickets || 0}
+                |  Tickets!
+            img(class="avatar" src="https://cdn.discordapp.com/avatars/#{id}/#{avatar}.webp?size=256")
+            .square
+                form(action="/pay", method="post")
+                    .payment
+                        .number-input
+                            button(onclick="this.parentNode.querySelector('input[type=number]').stepDown();return false;")
+                            input(class="quantity" min="1" name="quantity" value="1" id="quantity" type="number")
+                            button(class="plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();return false;")
+                        input(type="submit", value="Buy Tickets")
+                        input(type="hidden" id=user name="name" value=user)
+                        input(type="hidden" id=id name="id" value=id)
+                        input(type="hidden" id=email name="email" value=email)
+                        input(type="hidden" id=discrim name="discrim" value=discrim)
+                img(class="mascot" src="https://vignette.wikia.nocookie.net/yugioh/images/0/09/TourGuideFromtheUnderworld-DULI.png", alt="")

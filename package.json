@@ -1,0 +1,21 @@
+{
+  "name": "duel-links-tournament-bot",
+  "version": "1.0.0",
+  "description": "A bot to help with tournaments for Duel Links Community",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "duel",
+    "links",
+    "tournament",
+    "express"
+  ],
+  "author": "Effy",
+  "license": "ISC",
+  "dependencies": {
+    "challonge": "^2.1.2",
+    "sequelize": "^4.38.0"
+  }
+}
