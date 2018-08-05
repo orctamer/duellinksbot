@@ -1,3 +1,5 @@
+const {Client} = require('discord.js')
+const client = new Client()
 const express = require('express')
 const paypal = require('paypal-rest-sdk')
 const passport = require('passport')
@@ -6,15 +8,9 @@ const session = require('express-session')
 const path = require('path')
 const bodyParser = require('body-parser')
 const config = require('./config.json')
-const Sequelize = require('sequelize')
 const challonge = require('challonge')
-const sequelize = new Sequelize('database', 'root', 'password', {
-    host: 'localhost',
-    dialect: 'sqlite',
-    storage: './database.sqlite',
-    operatorsAliases: false
-})
-
+const CommandManager = require('./commandmanager')
+const Manager = new CommandManager(client)
 let currentTournament
 
 const tournament = challonge.createClient({
@@ -41,14 +37,6 @@ function checkTourney(tourney) {
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
-
-
-const Users = sequelize.define('user', {
-    username: Sequelize.STRING,
-    tickets: Sequelize.INTEGER,
-    userid: Sequelize.INTEGER,
-    email: Sequelize.STRING
-})
 
 var user
 var id
@@ -214,20 +202,15 @@ app.get('/cancel', (req, res) => res.redirect('/member'))
 app.listen(7911, () => console.log('Server Works'))
 
 
-const Discord = require('discord.js')
-const client = new Discord.Client()
-
 client.on('ready', () => {
     var guilds = client.guilds.map(x => x.id)
     console.log(`Logged in as ${client.user.tag}! on ${guilds}`)
-    sequelize.authenticate().then(() => {
-        console.log('db online')
-    }).catch(err => {
-        console.log(err, 'db offline')
-    })
 })
 
-client.on('message', async msg => {
+client.on('message', async message => Manager.handleMessage(message))
+
+
+/* client.on('message', async msg => {
     if (msg.author.bot) return
     let user = msg.author
     let [person] = await Users.findOrCreate({
@@ -252,7 +235,7 @@ client.on('message', async msg => {
             tickets: person.tickets - 1
         })
         msg.reply(`You have successfully redeemed 1 ticket! You have ${person.tickets} left!`)
-/*         if (!currentTournament || currentTournament.state === 'complete' || currentTournament.state === 'underway')
+         if (!currentTournament || currentTournament.state === 'complete' || currentTournament.state === 'underway')
          {
            return tournament.tournaments.create({
                 tournament: {
@@ -265,7 +248,7 @@ client.on('message', async msg => {
                     msg.reply(`Tournament created at: ${data.tournament.fullChallongeUrl}`)
                 }
               }); 
-        } */
+        } 
         await tournament.participants.create({
             id: currentTournament.tournament.url,
             participant: {
@@ -276,7 +259,7 @@ client.on('message', async msg => {
             }
           })
     }
-})
+}) */
 
 client.login(config.discordToken)
 
